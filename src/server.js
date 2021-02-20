@@ -13,8 +13,16 @@ app.use(express.static(pathDir));
 
 app.use(express.json());
 
-io.on("connection", ()=>{
+let count = 0;
+io.on("connection", (socket)=>{
     console.log("Socket io connection")
+
+    socket.emit("countupdated", count);
+
+    socket.on("increment", ()=>{
+        count++;
+        io.emit("countupdated",count)
+    })
 })
 
 server.listen(3005,()=> console.log(`Server running on PORT ${3005}`.bold.yellow))
